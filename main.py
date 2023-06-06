@@ -74,3 +74,9 @@ async def read_items(q: Annotated[str | None, Query(max_length=3)] = None):
     if q:
         results.update({"q": q})
     return results
+
+
+@app.get("/items3/")
+async def read_items3(q: Annotated[list[str] | None, Query()] = None):
+    query_items = {"q": q}
+    return query_items
