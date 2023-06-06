@@ -37,12 +37,21 @@ def read_root():
     return {"Hello": "World"}
 
 
-# testing comments
-@app.get("/items/{item_id}")
-def read_items(item_id: int):
-    ret = [Item(name="wonzzang", price=20.3, is_offer=True), Item(name="wonzzang2", price=40.3, is_offer=False)]
-
-    return {"data": ret}
+@app.get("/items/")
+async def read_items(
+    q: Annotated[
+        str | None,
+        Query(
+            title="Query string",
+            description="Query string for the items to search in the database that have a good match",
+            min_length=3,
+        ),
+    ] = None
+):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
 
 
 @app.put("/items/{item_id}")
@@ -69,7 +78,7 @@ async def create_item(item: Item):
 
 
 @app.get("/items2/")
-async def read_items(q: Annotated[str | None, Query(max_length=3)] = None):
+async def read_items2(q: Annotated[str | None, Query(max_length=3)] = None):
     results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
     if q:
         results.update({"q": q})
