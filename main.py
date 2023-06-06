@@ -1,6 +1,7 @@
 #!/bin/env python
 
-from fastapi import FastAPI
+from typing_extensions import Annotated
+from fastapi import FastAPI, Query
 from pydantic import BaseModel
 from enum import Enum
 
@@ -38,7 +39,7 @@ def read_root():
 
 # testing comments
 @app.get("/items/{item_id}")
-def read_item(item_id: int):
+def read_items(item_id: int):
     ret = [Item(name="wonzzang", price=20.3, is_offer=True), Item(name="wonzzang2", price=40.3, is_offer=False)]
 
     return {"data": ret}
@@ -60,3 +61,16 @@ fake_item_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}
 @app.get("/items/")
 def read_item(skip: int = 0, limit: int = 10):
     return fake_item_db[skip: skip + limit]
+
+
+@app.post("/items/")
+async def create_item(item: Item):
+    return item
+
+
+@app.get("/items2/")
+async def read_items(q: Annotated[str | None, Query(max_length=3)] = None):
+    results = {"items": [{"item_id": "Foo"}, {"item_id": "Bar"}]}
+    if q:
+        results.update({"q": q})
+    return results
