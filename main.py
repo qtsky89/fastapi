@@ -37,7 +37,7 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/items/")
+@app.get("/items9/")
 async def read_items(
     q: Annotated[
         str | None,
@@ -45,7 +45,9 @@ async def read_items(
             title="Query string",
             description="Query string for the items to search in the database that have a good match",
             min_length=3,
-            alias="item-query"
+            alias="item-query",
+            regex="^fixedquery$",
+            deprecated=True,
         ),
     ] = None
 ):
@@ -68,8 +70,8 @@ def read_file(fp: str):
 fake_item_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
 
 
-@app.get("/items/")
-def read_item(skip: int = 0, limit: int = 10):
+@app.get("/items4/")
+def read_item4(skip: int = 0, limit: int = 10):
     return fake_item_db[skip: skip + limit]
 
 
