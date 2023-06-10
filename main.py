@@ -1,7 +1,7 @@
 #!/bin/env python
 
 from typing_extensions import Annotated
-from fastapi import FastAPI, Query
+from fastapi import Cookie, FastAPI, Query
 from pydantic import BaseModel, Field
 from enum import Enum
 
@@ -95,3 +95,8 @@ async def read_items2(q: Annotated[str | None, Query(max_length=3)] = None):
 async def read_items3(q: Annotated[list[str] | None, Query()] = None):
     query_items = {"q": q}
     return query_items
+
+
+@app.get("/items5/")
+async def read_items5(ads_id: Annotated[str | None, Cookie()] = None):
+    return {"ads_id": ads_id}
