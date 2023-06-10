@@ -2,7 +2,7 @@
 
 from typing_extensions import Annotated
 from fastapi import FastAPI, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from enum import Enum
 
 
@@ -17,8 +17,11 @@ app = FastAPI()
 
 class Item(BaseModel):
     name: str
-    price: float
-    is_offer: bool | None = None
+    description: str | None = Field(
+        default=None, title="The description of the item", max_length=300
+    )
+    price: float = Field(gt=0, description="The price must be greater than zero")
+    tax: float | None = None
 
 
 @app.get("/models/{model_name}")
